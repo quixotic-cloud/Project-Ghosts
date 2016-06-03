@@ -18,7 +18,7 @@ event OnInit(UIScreen Screen)
 */	
 	ACTEG=`BATTLE.Spawn(class'X2_Actor_CTE_Group');
 	`log("-----------Registered for Object Moved-----------");	
-	NewGameState=class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("New Popup Event");
+/*	NewGameState=class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("New Popup Event");
 	Rand1=Rand(21)+40;
 	foreach `XCOMHISTORY.IterateByClassType(class'XComGameState_InteractiveObject', InteractiveObjectState) //Going over all Interactive objects 
 	{
@@ -31,7 +31,7 @@ event OnInit(UIScreen Screen)
 		//Rand2=Rand(1500);
 		NewUnit=`SPAWNMGR.CreateUnit(`XWORLD.GetPositionFromTileCoordinates(SavedTiles[i*4]),'Civilian',ETeam_Neutral,false,false,NewGameState);
 	}
-	`XCOMHISTORY.AddGameStateToHistory(NewGameState);
+	`XCOMHISTORY.AddGameStateToHistory(NewGameState);*/
 }
 function EventListenerReturn TestReturnStuff(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {

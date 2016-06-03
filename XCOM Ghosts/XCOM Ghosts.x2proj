@@ -235,7 +235,7 @@
     <Content Include="Src\XCOMGhosts\Classes\UI_Listener_TacHUD_FoVConeDrawer.uc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Src\XCOMGhosts\Classes\UI_Listener_UIMission_MoreCivis.uc">
+    <Content Include="Src\XCOMGhosts\Classes\UI_Listener_UITacHUD_MoreCivis.uc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Src\XCOMGhosts\Classes\UI_Listener_UIShell.uc">

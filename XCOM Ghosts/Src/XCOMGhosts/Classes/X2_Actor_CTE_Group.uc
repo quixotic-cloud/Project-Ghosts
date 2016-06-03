@@ -25,13 +25,13 @@ simulated event PostBeginPlay()
 	thisobj=self;
 	TargetMesh = StaticMesh(DynamicLoadObject("UI_3D.Tile.ConcealmentTile_Exit", class'StaticMesh'));
 	
-	`XEVENTMGR.RegisterForEvent(ThisObj, 'UnitDied', OnUnitRemovedFromPlay, ELD_Immediate, , ThisObj,true);
-	`XEVENTMGR.RegisterForEvent(ThisObj, 'UnitRemovedFromPlay', OnUnitRemovedFromPlay, ELD_Immediate, , ThisObj,true);
-	`XEVENTMGR.RegisterForEvent(ThisObj, 'TacticalGameEnd', OnTacticalEnded, ELD_Immediate, , ThisObj,true);
+	`XEVENTMGR.RegisterForEvent(ThisObj, 'UnitDied', OnUnitRemovedFromPlay, ELD_Immediate, , ,true);
+	`XEVENTMGR.RegisterForEvent(ThisObj, 'UnitRemovedFromPlay', OnUnitRemovedFromPlay, ELD_Immediate, , ,true);
+	`XEVENTMGR.RegisterForEvent(ThisObj, 'TacticalGameEnd', OnTacticalEnded, ELD_Immediate, , ,true);
 	//`XEVENTMGR.RegisterForEvent(ThisObj, 'ObjectMoved', UpdateTiles, ELD_Immediate, , ThisObj,true);
 	//`XEVENTMGR.RegisterForEvent(ThisObj, 'ObjectVisibilityChanged', UpdateTiles, ELD_Immediate, , ThisObj,true);
-	`XEVENTMGR.RegisterForEvent(ThisObj, 'OnTacticalBeginPlay', OnTacticalEnded, ELD_Immediate, , ThisObj,true);
-	`XEVENTMGR.RegisterForEvent(ThisObj, 'PlayerTurnEnded', OnTacticalEnded, ELD_Immediate, , ThisObj,true);
+	`XEVENTMGR.RegisterForEvent(ThisObj, 'OnTacticalBeginPlay', OnTacticalEnded, ELD_Immediate, , ,true);
+	`XEVENTMGR.RegisterForEvent(ThisObj, 'PlayerTurnEnded', OnTacticalEnded, ELD_Immediate, , ,true);
 	//`XEVENTMGR.RegisterForEvent(ThisObj, 'PlayerTurnBegun', CleanSlate, ELD_Immediate, , ThisObj,true);
 
 	return;
@@ -343,13 +343,20 @@ function DestroyTiles(int UnitMObjectIDef)
 
 function DestroyAllTiles()
 {
-	local int						j,MObjectID;
-	local XComGameState_Unit	Unit;
+	local int								j,MObjectID;
+	local XComGameState_Unit				Unit;
+	local XComGameState_InteractiveObject	IntObject;
 
 	foreach	`XCOMHISTORY.IterateByClassType(class'XComGameState_Unit',Unit)	//go through all units and kill all the tile effects.
 	{
 		
 		MObjectID=Unit.ObjectID;
+		DestroyTiles(MObjectID);
+	}
+	foreach	`XCOMHISTORY.IterateByClassType(class'XComGameState_InteractiveObject',IntObject)	//go through all units and kill all the tile effects.
+	{
+		
+		MObjectID=IntObject.ObjectID;
 		DestroyTiles(MObjectID);
 	}	
 	CTE_Tile_Matrix.Length=0;
