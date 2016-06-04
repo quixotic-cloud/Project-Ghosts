@@ -3,6 +3,8 @@
 class XComGameState_Unit_FoV Extends XComGameState_Unit;
 
 //var X2Actor_ConeTarget	ConeActor;
+var bool ActivatedMapAlert;
+var bool HasReinforcementsOnTheWay;
 
 function EventListenerReturn OnUnitEnteredTile(Object EventData, Object EventSource, XComGameState GameState, Name EventID)
 {
@@ -118,7 +120,7 @@ function EventListenerReturn OnUnitEnteredTile(Object EventData, Object EventSou
 
 		VisibilityMgr.GetVisibilityInfo(ThisUnitState.ObjectID, OtherUnitState.ObjectID, VisibilityInfoFromThisUnit);
 
-		if(VisibilityInfoFromThisUnit.bClearLOS && VisibilityInfoFromOtherUnit.bVisibleBasic && !(VisibilityInfoFromThisUnit.TargetCover == CT_Standing ||(OtherUnitState.IsHunkeredDown() && VisibilityInfoFromThisUnit.TargetCover ==CT_MidLevel)) )
+		if(VisibilityInfoFromThisUnit.bClearLOS && VisibilityInfoFromOtherUnit.bVisibleBasic && !(VisibilityInfoFromThisUnit.TargetCoverAngle>=90||(VisibilityInfoFromThisUnit.TargetCover == CT_Standing ||(OtherUnitState.IsHunkeredDown() && VisibilityInfoFromThisUnit.TargetCover ==CT_MidLevel))) )
 		{
 			// check if the other unit is concealed, and this unit's move has revealed him
 			if( OtherUnitState.IsConcealed() &&
@@ -164,7 +166,7 @@ function EventListenerReturn OnUnitEnteredTile(Object EventData, Object EventSou
 			VisibilityMgr.GetVisibilityInfo(OtherUnitState.ObjectID, ThisUnitState.ObjectID, VisibilityInfoFromOtherUnit);
 		
 			// check if this unit is Visible and NOT in full cover AND NOT hunkered down in half cover.
-			if(VisibilityInfoFromThisUnit.bClearLOS && VisibilityInfoFromOtherUnit.bVisibleBasic && !(VisibilityInfoFromThisUnit.TargetCover == CT_Standing ||(ThisUnitState.IsHunkeredDown() && VisibilityInfoFromThisUnit.TargetCover ==CT_MidLevel)) )
+			if(VisibilityInfoFromThisUnit.bClearLOS && VisibilityInfoFromOtherUnit.bVisibleBasic && !(VisibilityInfoFromThisUnit.TargetCoverAngle>=90||(VisibilityInfoFromThisUnit.TargetCover == CT_Standing ||(OtherUnitState.IsHunkeredDown() && VisibilityInfoFromThisUnit.TargetCover ==CT_MidLevel))) )
 			{
 				// check if this unit is concealed and that concealment is broken by entering into an enemy's detection tile
 				if( ThisUnitState.IsConcealed() && UnitBreaksConcealment(OtherUnitState) )

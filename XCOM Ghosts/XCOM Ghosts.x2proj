@@ -2181,6 +2181,9 @@
     <Content Include="Src\XCOMGhosts\Classes\X2Effect_IndividualEnterConcealment.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\XCOMGhosts\Classes\X2Effect_MapAlert.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\XCOMGhosts\Classes\X2Effect_Silencer.uc">
       <SubType>Content</SubType>
     </Content>

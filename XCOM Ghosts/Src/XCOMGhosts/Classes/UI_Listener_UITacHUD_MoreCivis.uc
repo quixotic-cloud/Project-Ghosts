@@ -20,7 +20,7 @@ event OnInit(UIScreen Screen)
 	
 	ThisObj=self;
 	
-	`XEVENTMGR.RegisterForEvent(ThisObj, 'OnTacticalBeginPlay', OnTacticalStarted, ELD_OnStateSubmitted);
+	//`XEVENTMGR.RegisterForEvent(ThisObj, 'OnTacticalBeginPlay', OnTacticalStarted, ELD_OnStateSubmitted);
 	
 }
 

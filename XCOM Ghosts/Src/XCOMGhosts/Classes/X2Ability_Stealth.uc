@@ -12,6 +12,7 @@ static function array<X2DataTemplate> CreateTemplates()
 	Templates.AddItem(ReConcealeSquad());
 	Templates.AddItem(ReConcealeUnit());
 	Templates.AddItem(SilencedAbility());
+	Templates.AddItem(MapAlert());
 
 	//Templates.AddItem(ChangeWeaponInstance());
 	//Templates.AddItem(Silent_SniperStandardFire());
@@ -36,7 +37,47 @@ Static function string GetSilencedAbilityName(X2WeaponUpgradeTemplate UpgradeTem
 {
 	return "Silenced Weapon";	
 } 
- 
+static function X2AbilityTemplate MapAlert()
+{
+    local X2AbilityTemplate						Template;
+	local X2Effect_MapAlert						MapAlert;
+    local X2AbilityMultiTarget_AllAllies		MultiTargetingStyle;
+	local X2AbilityTrigger_EventListener		EventListener;
+
+	`CREATE_X2ABILITY_TEMPLATE(Template, 'MapAlert');
+	
+	Template.AbilitySourceName = 'eAbilitySource_Standard';
+	Template.eAbilityIconBehaviorHUD = eAbilityIconBehavior_NeverShow;
+	Template.Hostility = eHostility_Neutral;
+	Template.IconImage = "img:///UILibrary_PerkIcons.UIPerk_stealth";
+	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.CLASS_COLONEL_PRIORITY;
+
+	Template.AbilityToHitCalc = default.DeadEye;
+	Template.AbilityTargetStyle = default.SelfTarget;
+	
+	Template.AbilityShooterConditions.AddItem(default.LivingShooterProperty);
+
+	EventListener = new class'X2AbilityTrigger_EventListener';
+	EventListener.ListenerData.Deferral = ELD_OnStateSubmitted;
+	EventListener.ListenerData.EventID = 'ActivateMapAlert_Dragonpunk';
+	EventListener.ListenerData.Filter = eFilter_None;
+	EventListener.ListenerData.EventFn = class'XComGameState_Ability'.static.AbilityTriggerEventListener_Self;
+	EventListener.ListenerData.Priority = 45; //This ability must get triggered after the rest of the on-death listeners (namely, after mind-control effects get removed)
+	Template.AbilityTriggers.AddItem(EventListener);
+
+	MapAlert = new class'X2Effect_MapAlert';
+	MapAlert.BuildPersistentEffect(4, false, true, false, eGameRule_PlayerTurnEnd);
+	MapAlert.DuplicateResponse = eDupe_Ignore;
+	
+	Template.AddShooterEffect(MapAlert);
+	
+	Template.BuildNewGameStateFn = TypicalAbility_BuildGameState;
+	Template.BuildVisualizationFn = TypicalAbility_BuildVisualization;
+	Template.bSkipFireAction = true;
+
+	return Template;
+}
+
 static function X2AbilityTemplate ReConcealeSquad()
 {
     local X2AbilityTemplate						Template;

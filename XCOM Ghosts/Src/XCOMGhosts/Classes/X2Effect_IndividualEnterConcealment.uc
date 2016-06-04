@@ -5,6 +5,7 @@ class X2Effect_IndividualEnterConcealment extends X2Effect_Persistent;
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
 	`log("Added X2Effect_IndividualEnterConcealment"); 
+	super.OnEffectAdded(ApplyEffectParameters,kNewEffectState,NewGameState,NewEffectState);
 }
 
 
@@ -15,12 +16,22 @@ simulated function OnEffectRemoved(const out EffectAppliedData ApplyEffectParame
 
 	OwningUnit=XComGameState_Unit(`XCOMHISTORY.GetGameStateForObjectID(ApplyEffectParameters.SourceStateObjectRef.ObjectID));
 	HasE_Enemies=HasEngagedEnemies(OwningUnit);
-	if(HasE_Enemies==false) {`log("Redoing Individual Concealment"); bToPass=true;}
-	else {`log("Failed doing Individual Concealment"); bToPass=false;}
+	if(HasE_Enemies==false) 
+	{
+		`log("Redoing Individual Concealment"); 
+		bToPass=true;
+	}
+	else 
+	{
+		`log("Failed doing Individual Concealment"); 
+		bToPass=false;
+		`XEVENTMGR.TriggerEvent('ActivateMapAlert_Dragonpunk',OwningUnit,OwningUnit,NewGameState);
+	}
 
-	ApplySquadConceal(OwningUnit, NewGameState, bToPass);
+	ApplyIndConceal(OwningUnit, NewGameState, bToPass);
+	super.OnEffectRemoved(ApplyEffectParameters,NewGameState,bCleansed,RemovedEffectState);
 }
-function ApplySquadConceal(XComGameState_Unit Unit,XComGameState NewGameState,optional bool ReConceale=false)
+function ApplyIndConceal(XComGameState_Unit Unit,XComGameState NewGameState,optional bool ReConceale=false)
 {
 	local array<XComGameState_Unit>	AttachedUnits;
 	local XComGameState_Unit		GremlinUnit;
@@ -55,7 +66,7 @@ function bool HasEngagedEnemies(XComGameState_Unit ThisUnitState)
 		//	`log("");
 			
 			VisibilityMgr.GetVisibilityInfo(ThisUnitState.ObjectID, Unit.ObjectID, VisibilityInfoFromOtherUnit);
-			if((Unit.GetCurrentStat(eStat_AlertLevel) >= `ALERT_LEVEL_RED && Unit.GetCurrentStat(eStat_HP)>0 ) && VisibilityInfoFromOtherUnit.bVisibleGameplay)	
+			if((Unit.GetCurrentStat(eStat_AlertLevel) >= `ALERT_LEVEL_RED && Unit.GetCurrentStat(eStat_HP)>0 ) &&!VisibilityInfoFromOtherUnit.bBeyondSightRadius)	
 				Return True;
 		}
 	}
